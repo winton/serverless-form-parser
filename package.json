@@ -1,5 +1,5 @@
 {
-  "name": "@winton/serverless-form-parser",
+  "name": "serverless-form-parser",
   "version": "0.2.0",
   "description": "Form and file upload parser for serverless environments 🌋",
   "main": "dist/index.js",
