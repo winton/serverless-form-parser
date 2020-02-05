@@ -18,7 +18,9 @@ const port = 4000
 
 http
   .createServer(async (req, res) => {
-    const { files, params } = await parser.fromHttp(req)
+    const { files, params } = await parser.fromHttpRequest(
+      req
+    )
     res.end(JSON.stringify(params))
   })
   .listen(4000)
