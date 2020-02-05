@@ -18,9 +18,7 @@ const port = 4000
 
 http
   .createServer(async (req, res) => {
-    const { files, params } = await parser.fromHttp(
-      req
-    )
+    const { files, params } = await parser.fromHttp(req)
     res.end(JSON.stringify(params))
   })
   .listen(4000)
@@ -34,12 +32,12 @@ import {
   APIGatewayProxyResult,
 } from "aws-lambda"
 
-import formidable from "formidable-lambda"
+import parser from "serverless-form-parser"
 
 export async function lambda(
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> {
-  const { files, params } = await parseForm.fromApiGateway(
+  const { files, params } = await parser.fromApiGateway(
     event
   )
   return { body: JSON.stringify(params) }
