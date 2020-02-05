@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "module": "commonjs",
+    "outDir": "../dist",
+    "rootDir": ".",
+    "target": "es5"
+  },
+  "extends": "../tsconfig-base.json"
+}

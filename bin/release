@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+cd "$(dirname "$0")/../"
+
+BUMP=${1:-minor}
+
+./bin/build
+git status
+npx release-it --ci -i $BUMP

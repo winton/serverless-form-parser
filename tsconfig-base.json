@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "allowUnusedLabels": true,
+    "alwaysStrict": true,
+    "baseUrl": ".",
+    "declaration": true,
+    "esModuleInterop": true,
+    "jsx": "react",
+    "jsxFactory": "self.render.createElement",
+    "moduleResolution": "node",
+    "sourceMap": true
+  }
+}

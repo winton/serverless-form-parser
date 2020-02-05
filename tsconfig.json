@@ -1,0 +1,10 @@
+{
+  "compileOnSave": true,
+  "extends": "./tsconfig-base.json",
+  "files": [],
+  "references": [
+    {
+      "path": "./src/tsconfig.cjs.json"
+    }
+  ]
+}
