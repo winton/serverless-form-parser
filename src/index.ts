@@ -1,6 +1,7 @@
-import { basename } from "path"
-import { PassThrough } from "stream"
+import { basename, extname } from "path"
 import { IncomingMessage } from "http"
+import { createWriteStream } from "fs"
+import tmp from "tmp-promise"
 
 import Busboy from "busboy"
 import { APIGatewayProxyEvent } from "aws-lambda"
@@ -61,19 +62,25 @@ export class ServerlessFormParser {
     params: Record<string, any>
   ): [busboy.Busboy, Promise<Record<string, any>>] {
     const busboy = new Busboy({ headers: headers })
-    const stream = new PassThrough()
-
     busboy.on(
       "file",
-      (fieldname, file, filename, encoding, mimetype) => {
-        file.on("data", data => {
-          stream.write(data)
-        })
+      async (
+        fieldname,
+        file,
+        filename,
+        encoding,
+        mimetype
+      ) => {
+        const ext = extname(filename)
+        const { path } = await tmp.file({ postfix: ext })
+        const stream = createWriteStream(path)
+
+        file.pipe(stream)
+
+        file.on("data", () => {})
         file.on("end", function() {
-          stream.end()
           files[fieldname] = {
-            file: stream,
-            filename,
+            path,
             name: basename(filename),
             encoding,
             mimetype,

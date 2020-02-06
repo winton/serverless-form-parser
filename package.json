@@ -42,7 +42,8 @@
     "typescript": "3.7.5"
   },
   "dependencies": {
-    "busboy": "0.3.1"
+    "busboy": "0.3.1",
+    "tmp-promise": "2.0.2"
   },
   "husky": {
     "hooks": {
