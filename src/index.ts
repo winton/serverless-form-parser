@@ -1,6 +1,7 @@
 import { basename, extname } from "path"
 import { IncomingMessage } from "http"
 import { createWriteStream } from "fs"
+import querystring from "querystring"
 import tmp from "tmp-promise"
 
 import Busboy from "busboy"
@@ -13,6 +14,16 @@ export class ServerlessFormParser {
     const headers = this.cleanHeaders(event.headers)
     const params = {}
     const files = {}
+
+    if (event.httpMethod === "GET") {
+      return {
+        params: Object.assign(
+          {},
+          event.queryStringParameters,
+          event.pathParameters
+        ),
+      }
+    }
 
     if (
       !headers["content-type"] ||
@@ -47,6 +58,12 @@ export class ServerlessFormParser {
     const headers = this.cleanHeaders(req.headers)
     const params = {}
     const files = {}
+
+    if (req.method === "GET" && req.url.includes("?")) {
+      return {
+        params: querystring.parse(req.url.split("?")[1]),
+      }
+    }
 
     if (!headers["content-type"] || req.method !== "POST") {
       return { files, params }
