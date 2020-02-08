@@ -1,6 +1,6 @@
 {
   "name": "serverless-form-parser",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Form and file upload parser for serverless environments 🌋",
   "main": "dist/index.js",
   "scripts": {
