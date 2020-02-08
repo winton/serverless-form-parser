@@ -36,6 +36,13 @@ export class ServerlessFormParser {
       return Promise.resolve(JSON.parse(event.body))
     }
 
+    if (
+      headers["content-type"] ===
+      "application/x-www-form-urlencoded"
+    ) {
+      return Promise.resolve(querystring.parse(event.body))
+    }
+
     const [busboy, finished] = this.buildBusboy(
       headers,
       files,
@@ -70,7 +77,14 @@ export class ServerlessFormParser {
     }
 
     if (headers["content-type"] === "application/json") {
-      return await this.parseRequestStream(req)
+      return await this.parseJsonPost(req)
+    }
+
+    if (
+      headers["content-type"] ===
+      "application/x-www-form-urlencoded"
+    ) {
+      return await this.parseUrlencodedPost(req)
     }
 
     const [busboy, finished] = this.buildBusboy(
@@ -142,7 +156,7 @@ export class ServerlessFormParser {
     return clean
   }
 
-  async parseRequestStream(
+  async parseJsonPost(
     req: IncomingMessage
   ): Promise<Record<string, any>> {
     let json = ""
@@ -154,6 +168,24 @@ export class ServerlessFormParser {
     const finished = new Promise(resolve => {
       req.on("end", async () => {
         resolve({ params: JSON.parse(json) })
+      })
+    })
+
+    return await finished
+  }
+
+  async parseUrlencodedPost(
+    req: IncomingMessage
+  ): Promise<Record<string, any>> {
+    let data = ""
+
+    req.on("data", chunk => {
+      data += chunk
+    })
+
+    const finished = new Promise(resolve => {
+      req.on("end", async () => {
+        resolve({ params: querystring.parse(data) })
       })
     })
 
