@@ -33,14 +33,18 @@ export class ServerlessFormParser {
     }
 
     if (headers["content-type"] === "application/json") {
-      return Promise.resolve(JSON.parse(event.body))
+      return Promise.resolve({
+        params: JSON.parse(event.body),
+      })
     }
 
     if (
       headers["content-type"] ===
       "application/x-www-form-urlencoded"
     ) {
-      return Promise.resolve(querystring.parse(event.body))
+      return Promise.resolve({
+        params: querystring.parse(event.body),
+      })
     }
 
     const [busboy, finished] = this.buildBusboy(
