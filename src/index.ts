@@ -17,6 +17,7 @@ export class ServerlessFormParser {
 
     if (event.httpMethod === "GET") {
       return {
+        files,
         params: Object.assign(
           {},
           event.queryStringParameters,
@@ -34,6 +35,7 @@ export class ServerlessFormParser {
 
     if (headers["content-type"] === "application/json") {
       return Promise.resolve({
+        files,
         params: JSON.parse(event.body),
       })
     }
@@ -43,6 +45,7 @@ export class ServerlessFormParser {
       "application/x-www-form-urlencoded"
     ) {
       return Promise.resolve({
+        files,
         params: querystring.parse(event.body),
       })
     }
@@ -72,6 +75,7 @@ export class ServerlessFormParser {
 
     if (req.method === "GET" && req.url.includes("?")) {
       return {
+        files,
         params: querystring.parse(req.url.split("?")[1]),
       }
     }
@@ -171,7 +175,7 @@ export class ServerlessFormParser {
 
     const finished = new Promise(resolve => {
       req.on("end", async () => {
-        resolve({ params: JSON.parse(json) })
+        resolve({ files: {}, params: JSON.parse(json) })
       })
     })
 
@@ -189,7 +193,10 @@ export class ServerlessFormParser {
 
     const finished = new Promise(resolve => {
       req.on("end", async () => {
-        resolve({ params: querystring.parse(data) })
+        resolve({
+          files: {},
+          params: querystring.parse(data),
+        })
       })
     })
 
